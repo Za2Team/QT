@@ -13,19 +13,18 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.5.3'
-          dir: '${{ github.workspace }}/Qt'
           arch: 'win64_msvc2019_64'
 
       # بیلد کردن پروژه
       - name: Build
         run: |
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="${{ github.workspace }}/Qt/6.5.3/msvc2019_64"
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="${{ env.Qt6_DIR }}"
           cmake --build build --config Release
 
       # آماده‌سازی فایل‌های نهایی (دیپلوی)
       - name: Deploy
         run: |
-          & "${{ github.workspace }}/Qt/6.5.3/msvc2019_64/bin/windeployqt.exe" --qmldir . build/Release/MyQtApp.exe --compiler-runtime
+          & "${{ env.Qt6_DIR }}/bin/windeployqt.exe" --qmldir . build/Release/MyQtApp.exe --compiler-runtime
 
       # تحویل خروجی نهایی به شما
       - name: Upload Artifact
